@@ -1,9 +1,9 @@
 import { Router } from 'express';
 
+import ItemController from './controllers/ItemController';
+
 const routes = Router();
 
-routes.get('/', (request, response) => {
-  return response.send('Initial Commit');
-});
+routes.get('/items', ItemController.index);
 
 export default routes;
