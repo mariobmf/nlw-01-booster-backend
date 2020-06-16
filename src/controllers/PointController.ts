@@ -1,16 +1,18 @@
 import { Response, Request } from 'express';
+import ip from 'ip';
 import connection from '../database/connection';
 
 interface IPoint {
   id: number;
   name: string;
   email: string;
+  image: string;
   whatsapp: string;
   latitude: number;
   longitude: number;
   city: string;
   uf: string;
-  items: number[];
+  items: string;
 }
 
 class PointController {
@@ -27,8 +29,7 @@ class PointController {
     }: IPoint = request.body;
 
     const point = {
-      image:
-        'https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60',
+      image: request.file.filename,
       name,
       email,
       whatsapp,
@@ -44,7 +45,9 @@ class PointController {
 
     const pointId = insertedIds[0];
 
-    const pointItems = items.map((itemId) => ({
+    const itemsArray = items.split(',').map((item) => Number(item.trim()));
+
+    const pointItems = itemsArray.map((itemId) => ({
       item_id: itemId,
       point_id: pointId,
     }));
@@ -71,7 +74,14 @@ class PointController {
       .distinct()
       .select('points.*');
 
-    return response.json(points);
+    const serializedPoints = points.map((point) => {
+      return {
+        ...point,
+        image_url: `http://${ip.address()}:3333/uploads/${point.image}`,
+      };
+    });
+
+    return response.json(serializedPoints);
   }
 
   public async show(request: Request, response: Response): Promise<Response> {
@@ -82,12 +92,17 @@ class PointController {
     if (!point)
       return response.status(400).json({ message: 'Point not found!' });
 
+    const serializedPoint = {
+      ...point,
+      image_url: `http://${ip.address()}:3333/uploads/${point.image}`,
+    };
+
     const items = await connection('items')
       .join('point_items', 'items.id', '=', 'point_items.item_id')
       .where('point_items.point_id', id)
       .select('items.title');
 
-    return response.json({ ...point, items });
+    return response.json({ ...serializedPoint, items });
   }
 }
 export default new PointController();
