@@ -20,7 +20,7 @@ O Ecoleta é um marketplace que ajuda pessoas a encontrarem pontos de coleta de 
 
 ## 🤔 Como Usar
 
-### Instalado a API 
+### Instalando a API 
 
 ```bash
 # Clonar o Repositório
