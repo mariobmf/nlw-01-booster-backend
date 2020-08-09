@@ -27,7 +27,7 @@ O Ecoleta é um marketplace que ajuda pessoas a encontrarem pontos de coleta de 
 $ git clone https://github.com/DanielObara/NLW-1.0
 
 # Entrar no Repositório
-$ cd NLW-1.0/backend
+$ cd /backend
 
 # Instalar as Dependências
 $ yarn install
