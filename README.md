@@ -35,6 +35,9 @@ $ yarn install
 # Executar as Migrates
 $ yarn knex:migrate
 
+# Executar Seeds
+$ yarn knex:seed
+
 # Iniciar server
 $ yarn dev
 
